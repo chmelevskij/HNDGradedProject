@@ -1,0 +1,43 @@
+<!-- <!DOCTYPE html> -->
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Collaboration Collaboration</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+	<script>
+	$(function(){
+		if (!window["WebSocket"]){
+			return;
+		}
+
+		var content = $("#content");
+		var ws = new WebSocket('ws://' + window.location.host + '/ws');
+
+		// Text area is only editable when text area is opened
+		ws.onopen = function(e){
+			content.attr("disabled", false);
+		};
+
+		ws.onclose = function(e){
+			content.attr("disabled", true);
+		};
+
+		// Whenever we receive message, update text area
+		ws.onmessage = function(e){
+			if (e.data != content.val()){
+				content.val(e.data);
+			}
+		};
+
+		content.on("keyup", function(){
+				ws.send(content.val());
+			});
+		});
+	</script>
+	<style></style>
+</head>
+<body>
+<textarea id="content" name="" cols="30" rows="10"></textarea>
+</body>
+</html>
