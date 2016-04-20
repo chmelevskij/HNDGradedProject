@@ -7,12 +7,12 @@ var Paddle = function (x) {
 };
 Paddle.constructor = Paddle;
 Paddle.prototype = {
-    color: 'rgb(0,0,0)',
-    x: 5,
-    y: 10,
-    width: 20,
-    height: 100,
-    alpha: 1,
+	color: 'rgb(0,0,0)',
+	x: 5,
+	y: 10,
+	width: 20,
+	height: 100,
+	alpha: 1,
 	draw: function(){
 		context.fillStyle = this.color;
 		context.fillRect(this.x, this.y, this.width, this.height);
@@ -27,7 +27,7 @@ Paddle.prototype = {
 		return this.y;
 	},
 	get bottom(){
-		return this.y + this.height;	
+		return this.y + this.height;
 	},
 	get right(){
 		return this.x + this.width;
@@ -37,7 +37,7 @@ Paddle.prototype = {
 	},
 	// setters
 	set top(dist){
-		this.y = dist;	
+		this.y = dist;
 	},
 	set bottom(dist){
 		this.y = dist - this.height;
@@ -52,13 +52,13 @@ Paddle.prototype = {
 
 function Ball(){};
 Ball.prototype = {
-    color: 'rgb(0,0,120)',
-    x: 100,
-    y: 200,
+	color: 'rgb(0,0,120)',
+	x: 100,
+	y: 200,
 	vx: BALL_SPEED,
 	vy: BALL_SPEED,
 	radius: 25,
-    alpha: 1,
+	alpha: 1,
 	draw: function(){
 		context.beginPath();
 		context.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
@@ -74,7 +74,7 @@ Ball.prototype = {
 		return this.y - this.radius;
 	},
 	get bottom(){
-		return this.y + this.radius;	
+		return this.y + this.radius;
 	},
 	get right(){
 		return this.x + this.radius;
@@ -84,7 +84,7 @@ Ball.prototype = {
 	},
 	// setters
 	set top(dist){
-		this.y = dist + this.radius;	
+		this.y = dist + this.radius;
 	},
 	set bottom(dist){
 		this.y = dist - this.radius;
@@ -105,20 +105,20 @@ var canvas = document.getElementById('cnv'),
 	ball = new Ball();
 
 function checkWorldBoundaries(sprite){
-    if (sprite.top < 0) {
-        sprite.top = 0;
-    } else if  (sprite.bottom > canvas.height){
-        sprite.bottom = canvas.height;
-    }
+	if (sprite.top < 0) {
+		sprite.top = 0;
+	} else if  (sprite.bottom > canvas.height){
+		sprite.bottom = canvas.height;
+	}
 }
 
 function bounceTheBall(sprite){
-    if (sprite.top < 0 || sprite.bottom > canvas.height) {
-        sprite.vy = -sprite.vy;
-    }
+	if (sprite.top < 0 || sprite.bottom > canvas.height) {
+		sprite.vy = -sprite.vy;
+	}
 	if  (sprite.right > canvas.width || sprite.left < 0){
-        sprite.vx = -sprite.vx;
-    }
+		sprite.vx = -sprite.vx;
+	}
 }
 
 function checkForCollision(paddle, ball){
@@ -131,7 +131,7 @@ function checkForCollision(paddle, ball){
 }
 
 function render() {
-    context.clearRect(0, 0, canvas.width, canvas.height);
+	context.clearRect(0, 0, canvas.width, canvas.height);
 
 	checkWorldBoundaries(paddle1);
 	checkWorldBoundaries(paddle2);
@@ -147,7 +147,7 @@ function render() {
 	ball.x += ball.vx;
 	ball.y += ball.vy;
 
-    window.requestAnimationFrame(render);
+	window.requestAnimationFrame(render);
 }
 render();
 
@@ -156,17 +156,17 @@ var host = window.location.host,
 wsURL = 'ws://' + host + '/ws';
 ws = new WebSocket(wsURL);
 ws.onopen = function (e) {
-    console.log('Websocket open on: ' + wsURL);
+	console.log('Websocket open on: ' + wsURL);
 }
 ws.onclose = function (e) {
-    console.log('WebSocket was closed');
+	console.log('WebSocket was closed');
 }
 ws.onmessage = function (e) {
-    console.log('Received message from server:' + e.data);
+	console.log('Received message from server:' + e.data);
 	acceleration = parseInt(e.data);
-    paddle1.y += acceleration;
-    paddle2.y += acceleration;
+	paddle1.y += acceleration;
+	paddle2.y += acceleration;
 }
 ws.onerror = function (e) {
-    console.log('Something went wrong with the connection');
+	console.log('Something went wrong with the connection');
 }

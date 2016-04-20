@@ -1,4 +1,3 @@
-
 body, html{
 	font-family: 'Roboto', sans-serif;
 	background-color: #303030;
@@ -13,6 +12,7 @@ body, html{
 	border: 5px solid #CCC;
 	border-radius: 10px;
 }
+
 .ball {
 	position:relative;
 	top: 90px;
@@ -22,7 +22,6 @@ body, html{
 	background: green;
 	border-radius: 100%;
 }
-
 
 .arrows {
 	display: flex;
@@ -145,6 +144,3 @@ th, td{
 	border-bottom: 100px solid transparent;
 	border-left: 25px solid #E2E2E2;
 }
-}
-
-
