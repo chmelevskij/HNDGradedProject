@@ -22,3 +22,7 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+# Ignore backups and swap files
+*.swp
+*.swo

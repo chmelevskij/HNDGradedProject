@@ -62,6 +62,7 @@ func (c *client) readPump() {
 	for {
 		_, message, err := c.ws.ReadMessage()
 		if err != nil {
+			log.Println(err)
 			break
 		}
 

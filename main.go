@@ -8,7 +8,7 @@ import (
 
 func main() {
 	addr := "0.0.0.0:9090"
-	fmt.Println("Collab Edit Running", addr)
+	fmt.Println("Websocket Running", addr)
 	go h.run()
 	http.Handle("/", http.FileServer(http.Dir("./public")))
 	http.HandleFunc("/ws", serveWs)

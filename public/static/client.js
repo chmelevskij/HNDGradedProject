@@ -1,36 +1,152 @@
-// Utilities
-var logger = document.getElementById('content');
-function log(message) {
-    logger.value += message + '\n';
-}
+// Constants
+var BALL_SPEED = 5;
 
 // Classes
-var Paddle = function () {
+var Paddle = function (x) {
+	this.x = x;
 };
 Paddle.constructor = Paddle;
 Paddle.prototype = {
     color: 'rgb(0,0,0)',
-    x: 10,
+    x: 5,
     y: 10,
     width: 20,
     height: 100,
-    alpha: 1
-}
+    alpha: 1,
+	draw: function(){
+		context.fillStyle = this.color;
+		context.fillRect(this.x, this.y, this.width, this.height);
+	},
+	// getters
+	get center(){
+		x = this.x + this.width / 2;
+		y = this.y + this.height / 2;
+		return {x: x, y: y};
+	},
+	get top(){
+		return this.y;
+	},
+	get bottom(){
+		return this.y + this.height;	
+	},
+	get right(){
+		return this.x + this.width;
+	},
+	get left(){
+		return this.x;
+	},
+	// setters
+	set top(dist){
+		this.y = dist;	
+	},
+	set bottom(dist){
+		this.y = dist - this.height;
+	},
+	set right(dist){
+		this.x = dist - this.width;
+	},
+	set left(dist){
+		this.x = dist;
+	}
+};
+
+function Ball(){};
+Ball.prototype = {
+    color: 'rgb(0,0,120)',
+    x: 100,
+    y: 200,
+	vx: BALL_SPEED,
+	vy: BALL_SPEED,
+	radius: 25,
+    alpha: 1,
+	draw: function(){
+		context.beginPath();
+		context.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+		context.closePath();
+		context.fillStyle = this.color;
+		context.fill();
+	},
+	// getters
+	get center(){
+		return {x: this.x, y: this.y};
+	},
+	get top(){
+		return this.y - this.radius;
+	},
+	get bottom(){
+		return this.y + this.radius;	
+	},
+	get right(){
+		return this.x + this.radius;
+	},
+	get left(){
+		return this.x - this.radius;
+	},
+	// setters
+	set top(dist){
+		this.y = dist + this.radius;	
+	},
+	set bottom(dist){
+		this.y = dist - this.radius;
+	},
+	set right(dist){
+		this.x = dist - this.radius;
+	},
+	set left(dist){
+		this.x = dist + this.radius;
+	}
+};
 
 // Rendering
 var canvas = document.getElementById('cnv'),
-context = canvas.getContext('2d'),
-paddle = new Paddle();
+	context = canvas.getContext('2d'),
+	paddle1 = new Paddle(5),
+	paddle2 = new Paddle(canvas.width - 25),
+	ball = new Ball();
+
+function checkWorldBoundaries(sprite){
+    if (sprite.top < 0) {
+        sprite.top = 0;
+    } else if  (sprite.bottom > canvas.height){
+        sprite.bottom = canvas.height;
+    }
+}
+
+function bounceTheBall(sprite){
+    if (sprite.top < 0 || sprite.bottom > canvas.height) {
+        sprite.vy = -sprite.vy;
+    }
+	if  (sprite.right > canvas.width || sprite.left < 0){
+        sprite.vx = -sprite.vx;
+    }
+}
+
+function checkForCollision(paddle, ball){
+		if(ball.left < paddle.right &&
+			ball.right > paddle.left &&
+			ball.top < paddle.bottom &&
+			ball.bottom > paddle.top){
+				ball.vx = -ball.vx;
+		}
+}
 
 function render() {
-    context.clearRect(0, 0, canvas.width, canvas.height)
-    context.fillStyle = paddle.color;
-    if (paddle.y < 0 || isNaN(paddle.y)) {
-        paddle.y = 0;
-    } else if  (paddle.y > canvas.height|| isNaN(paddle.y)){
-        paddle.y = canvas.height;
-    }
-    context.fillRect(paddle.x, paddle.y, paddle.width, paddle.height)
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+	checkWorldBoundaries(paddle1);
+	checkWorldBoundaries(paddle2);
+	bounceTheBall(ball);
+
+	checkForCollision(paddle1, ball);
+	checkForCollision(paddle2, ball);
+
+	ball.draw();
+	paddle1.draw();
+	paddle2.draw();
+
+	ball.x += ball.vx;
+	ball.y += ball.vy;
+
     window.requestAnimationFrame(render);
 }
 render();
@@ -47,7 +163,9 @@ ws.onclose = function (e) {
 }
 ws.onmessage = function (e) {
     console.log('Received message from server:' + e.data);
-    paddle.y += parseInt(e.data);
+	acceleration = parseInt(e.data);
+    paddle1.y += acceleration;
+    paddle2.y += acceleration;
 }
 ws.onerror = function (e) {
     console.log('Something went wrong with the connection');

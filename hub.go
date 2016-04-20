@@ -53,7 +53,7 @@ func (h *hub) broadcastMessage() {
 		select {
 		case c.send <- []byte(h.content):
 			break
-			// We can't reach the client
+		// We can't reach the client
 		default:
 			close(c.send)
 			delete(h.clients, c)
