@@ -1,5 +1,9 @@
 package main
 
+import (
+	"log"
+)
+
 // hub maintains the set of active connections and broadcasts the
 // messages to active connections
 type hub struct {
@@ -7,7 +11,7 @@ type hub struct {
 	clients map[*client]bool
 
 	// Inbound messages from the connections
-	broadcast chan string
+	broadcast chan *Message
 
 	// Register clients
 	register chan *client
@@ -16,15 +20,15 @@ type hub struct {
 	unregister chan *client
 
 	// Coloboration bit
-	content string
+	content *Message
 }
 
 var h = hub{
-	broadcast:  make(chan string),
+	broadcast:  make(chan *Message),
 	register:   make(chan *client),
 	unregister: make(chan *client),
 	clients:    make(map[*client]bool),
-	content:    "",
+	content:    &Message{},
 }
 
 func (h *hub) run() {
@@ -32,7 +36,8 @@ func (h *hub) run() {
 		select {
 		case c := <-h.register:
 			h.clients[c] = true
-			c.send <- []byte(h.content)
+			log.Println("New user connected", c)
+			c.send <- h.content
 			break
 		case c := <-h.unregister:
 			_, ok := h.clients[c]
@@ -51,7 +56,7 @@ func (h *hub) run() {
 func (h *hub) broadcastMessage() {
 	for c := range h.clients {
 		select {
-		case c.send <- []byte(h.content):
+		case c.send <- h.content:
 			break
 		// We can't reach the client
 		default:

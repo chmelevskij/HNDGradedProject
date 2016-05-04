@@ -100,8 +100,8 @@ Ball.prototype = {
 // Rendering
 var canvas = document.getElementById('cnv'),
 	context = canvas.getContext('2d'),
-	paddle1 = new Paddle(5),
-	paddle2 = new Paddle(canvas.width - 25),
+	paddleLeft = new Paddle(5),
+	paddleRight = new Paddle(canvas.width - 25),
 	ball = new Ball();
 
 function checkWorldBoundaries(sprite){
@@ -133,16 +133,16 @@ function checkForCollision(paddle, ball){
 function render() {
 	context.clearRect(0, 0, canvas.width, canvas.height);
 
-	checkWorldBoundaries(paddle1);
-	checkWorldBoundaries(paddle2);
+	checkWorldBoundaries(paddleLeft);
+	checkWorldBoundaries(paddleRight);
 	bounceTheBall(ball);
 
-	checkForCollision(paddle1, ball);
-	checkForCollision(paddle2, ball);
+	checkForCollision(paddleLeft, ball);
+	checkForCollision(paddleRight, ball);
 
 	ball.draw();
-	paddle1.draw();
-	paddle2.draw();
+	paddleLeft.draw();
+	paddleRight.draw();
 
 	ball.x += ball.vx;
 	ball.y += ball.vy;
@@ -157,15 +157,25 @@ wsURL = 'ws://' + host + '/ws';
 ws = new WebSocket(wsURL);
 ws.onopen = function (e) {
 	console.log('Websocket open on: ' + wsURL);
+    var initMsg = JSON.stringify({type:"projection"});
+	ws.send(initMsg);
 }
 ws.onclose = function (e) {
 	console.log('WebSocket was closed');
 }
 ws.onmessage = function (e) {
-	console.log('Received message from server:' + e.data);
-	acceleration = parseInt(e.data);
-	paddle1.y += acceleration;
-	paddle2.y += acceleration;
+	var msg = JSON.parse(e.data);
+	if(msg.type === "control"){
+		switch(msg.id){
+			case 2:
+				paddleLeft.y += msg.y;
+				break;
+			case 3:
+				paddleRight.y += msg.y;
+				break;
+		}
+	}
+
 }
 ws.onerror = function (e) {
 	console.log('Something went wrong with the connection');

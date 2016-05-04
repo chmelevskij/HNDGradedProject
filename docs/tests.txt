@@ -1,0 +1,9 @@
+Wed  4 May 2016 15:01:30 BST
+Now users can connect and play the game. There are two options once connected
+keyboard device motion to control the paddles. Projection has to be connected
+first and then users. By using users id paddles side is assigned. 
+
+Also instead of passing raw bytes now JSON is used for messages. One problem
+which has apeared is connection closes if one of the peers is idle for some
+period of time. Reason may be that once ping message is received pong message is
+not sent properly.

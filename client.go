@@ -1,27 +1,48 @@
 package main
 
 import (
+	"fmt"
 	"github.com/gorilla/websocket"
 	"log"
 	"net/http"
 	"time"
 )
 
+var maxId int = 0
+
 const (
-	writeWait      = 10 * time.Second
-	pongWait       = 60 * time.Second
-	pingPeriod     = (pongWait * 9) / 10
+	// Time allowed to write a message to the peer.
+	writeWait = 10 * time.Second
+
+	// Time allowed to read the next pong message from the peer.
+	pongWait = 60 * time.Second
+
+	// Send pings to peer with this perioc. Must be less than pongWait.
+	pingPeriod = (pongWait * 9) / 10
+
+	// Maximum message size allowed from peer.
 	maxMessageSize = 1024 * 1024
 )
 
 type client struct {
+	id   int
 	ws   *websocket.Conn
-	send chan []byte
+	send chan *Message
 }
 
 var upgrader = websocket.Upgrader{
 	ReadBufferSize:  maxMessageSize,
 	WriteBufferSize: maxMessageSize,
+}
+
+func NewClient(ws *websocket.Conn) *client {
+	maxId++
+	ch := make(chan *Message, maxMessageSize)
+	return &client{
+		id:   maxId,
+		ws:   ws,
+		send: ch,
+	}
 }
 
 func serveWs(w http.ResponseWriter, r *http.Request) {
@@ -36,10 +57,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	c := &client{
-		send: make(chan []byte, maxMessageSize),
-		ws:   ws,
-	}
+	c := NewClient(ws)
 
 	h.register <- c
 	go c.writePump()
@@ -58,15 +76,16 @@ func (c *client) readPump() {
 		c.ws.SetReadDeadline(time.Now().Add(pongWait))
 		return nil
 	})
-
+	message := Message{}
 	for {
-		_, message, err := c.ws.ReadMessage()
+		err := c.ws.ReadJSON(&message)
+		message.UserId = c.id
 		if err != nil {
 			log.Println(err)
 			break
 		}
-
-		h.broadcast <- string(message)
+		log.Println(&message)
+		h.broadcast <- &message
 	}
 }
 
@@ -85,9 +104,10 @@ func (c *client) writePump() {
 				c.write(websocket.CloseMessage, []byte{})
 				return
 			}
-			if err := c.write(websocket.TextMessage, message); err != nil {
+			if err := c.ws.WriteJSON(message); err != nil {
 				return
 			}
+			c.ws.SetWriteDeadline(time.Now().Add(writeWait))
 		case <-ticker.C:
 			if err := c.write(websocket.PingMessage, []byte{}); err != nil {
 				return
@@ -99,4 +119,9 @@ func (c *client) writePump() {
 func (c *client) write(mt int, message []byte) error {
 	c.ws.SetWriteDeadline(time.Now().Add(writeWait))
 	return c.ws.WriteMessage(mt, message)
+}
+
+func (c client) String() string {
+	msg := fmt.Sprintf("Id: %d", c.id)
+	return msg
 }
