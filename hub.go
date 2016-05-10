@@ -42,6 +42,7 @@ func (h *hub) run() {
 		case c := <-h.unregister:
 			_, ok := h.clients[c]
 			if ok {
+				log.Println("User disconnected", c)
 				delete(h.clients, c)
 				close(c.send)
 			}

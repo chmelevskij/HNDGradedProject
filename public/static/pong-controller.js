@@ -7,13 +7,16 @@ function init() {
 	var host = window.location.host,
 		wsURL = 'ws://' + host + '/ws',
 		ws = new WebSocket(wsURL);
+	var gameInfo = document.querySelector("#info");
 	ws.onopen = function(e) {
 		console.log('Websocket open on: ' + wsURL);
 		var initMsg = JSON.stringify({type:"player"});
 		ws.send(initMsg);
+		gameInfo.innerHTML = "Connected";
 	}
 	ws.onclose = function(e) {
 		console.log('WebSocket was closed');
+		gameInfo.innerHTML = "Disconnected";
 	}
 	ws.onmessage = function(e) {
 		console.log('Received message from server:\n' + e.data);
@@ -22,30 +25,36 @@ function init() {
 		console.log('Something went wrong with the connection');
 	}
 
-	function motionControls(event) {
+	function showDirection(accl){
 		var up = document.getElementById('up'),
 			down = document.getElementById('down');
-		var acclY = Math.round(event.acceleration.y * 5);
-		var acceleration = {type: "control", y:acclY};
-		var msg = JSON.stringify(acceleration);
-		console.log(msg);
-		if (acclY > 0) {
+		if (accl > 0) {
 			up.style.visibility = 'visible';
-			ws.send(msg);
 		} else {
 			up.style.visibility = 'hidden';
 		}
-		if (acclY < 0) {
+		if (accl < 0) {
 			down.style.visibility = 'visible';
-			ws.send(msg);
 		} else {
 			down.style.visibility = 'hidden';
 		}
+
+	}
+
+	function sendAcceleration(acclY){
+		if (acclY > 0 || acclY < 0){
+			var acceleration = {type: "control", y:acclY};
+			var msg = JSON.stringify(acceleration);
+			ws.send(msg);
+		}
+	}
+	function motionControls(event) {
+		var acclY = Math.round(event.acceleration.y * 5);
+		sendAcceleration(acclY);
+		showDirection(acclY);
 	}
 
 	function keyboardControls(event){
-		var up = document.getElementById('up'),
-			down = document.getElementById('down');
 		var acclY;
 		switch(event.keyCode){
 			case 38:
@@ -57,20 +66,9 @@ function init() {
 			default:
 				acclY = 0;
 		}
-		var acceleration = {type: "control", y:acclY};
-		var msg = JSON.stringify(acceleration);
-		if (acclY > 0) {
-			down.style.visibility = 'visible';
-			ws.send(msg);
-		} else {
-			down.style.visibility = 'hidden';
-		}
-		if (acclY < 0) {
-			up.style.visibility = 'visible';
-			ws.send(msg);
-		} else {
-			up.style.visibility = 'hidden';
-		}
+		sendAcceleration(acclY);
+		showDirection(acclY);
+
 	}
 	window.addEventListener('keydown', keyboardControls);
 	window.addEventListener('devicemotion', motionControls);
