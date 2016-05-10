@@ -1,9 +1,38 @@
-Wed  4 May 2016 15:01:30 BST
-Now users can connect and play the game. There are two options once connected
-keyboard device motion to control the paddles. Projection has to be connected
-first and then users. By using users id paddles side is assigned. 
+##Wed 16 March 2016 14:02:23 BST
 
-Also instead of passing raw bytes now JSON is used for messages. One problem
-which has apeared is connection closes if one of the peers is idle for some
-period of time. Reason may be that once ping message is received pong message is
-not sent properly.
+First tests were done with multiple users connecting to the local
+server. It was a slightly modified example application allowing users to
+edit content of the text box at the same time. No. of users: 3; Visible
+latency is about 0.5s when users are allowed to input at the same time.
+Bounced signals overwrite typed in content.
+
+NOTE: Snapshot of representation has to be calculated in the back end
+and sent to user calculated 0.5s back in time.  Check out linear
+interpolation for that.
+
+##Wed  4 May 2016 15:01:30 BST
+
+Now users can connect and play the game. There are two options once
+connected keyboard device motion to control the paddles. Projection has to
+be connected first and then users. By using users id paddles side is
+assigned. 
+
+Also instead of passing raw bytes now JSON is used for messages. One
+problem which has apeared is connection closes if one of the peers is idle
+for some period of time. Reason may be that once ping message is received
+pong message is not sent properly.
+
+##Tue 10 May 2016 15:42:38 BST
+
+branch 'unique-users' was merged into the master and tested. Problems
+which occured last week have disappeared after reseting client.go to the
+last commit. Now controller page can use device motion and keyboard if
+it's available. First test was done with two mobile devices ipad and
+android phone.
+
+In order to play devices have to be connected in following order:
+1. Rendering screen.
+2. Left player.
+3. Right player.
+
+Also controllers now display connection information.
