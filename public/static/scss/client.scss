@@ -1,0 +1,10 @@
+@import "colors", "dimensions", "elements";
+
+html {
+    background-color: $dt-background;
+}
+
+canvas{
+    box-shadow: 0 2px 2px $dt-status-bar;
+    background-color: $dt-cards;
+}

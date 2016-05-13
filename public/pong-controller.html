@@ -1,31 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8">
-		<title>Pong Controller</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<link rel="stylesheet" href="static/pong-controller.css">
-	</head>
-	<body>
-		<div class="arrows">
-			<div class="row">
-				<div class="col"><p></p></div>
-				<div class="col arrow" id="up"></div>
-				<div class="col"><p></p></div>
-			</div>
-			<div class="row">
-				<div class="col arrow" id="left"></div>
-				<div class="col"><p id="info"></p></div>
-				<div class="col arrow" id="right"></div>
-			</div>
-			<div class="row">
-				<div class="col">
-				</div>
-				<div class="col arrow" id="down">
-				</div>
-				<div class="col"></div>
-			</div>
-		</div>
-		<script src="static/pong-controller.js"></script>
-	</body>
+<head>
+	<meta charset="UTF-8">
+	<title>Pong Controller</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="theme-color" content="#212121">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link rel="stylesheet" href="static/css/pong-controller.css">
+</head>
+<body>
+	<div class="arrow">
+		<i id="up" class="material-icons">arrow_drop_up</i>
+	</div>
+	<div class="card">
+		<div><p id="info"></p></div>
+	</div>
+	<div class="arrow">
+		<i id="down" class="material-icons">arrow_drop_down</i>
+	</div>
+	<script src="static/js/pong-controller.js"></script>
+</body>
 </html>

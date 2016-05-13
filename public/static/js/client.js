@@ -1,13 +1,23 @@
 // Constants
 var BALL_SPEED = 5;
 
+//  Dark Theme Colors
+var dtStatusBar = "#000000";
+var dtAppBar = "#212121";
+var dtBackground = "#303030";
+var dtCards = "#424242";
+var dtMain = "#2196F3";
+var dtMainDarker = "#1976D2";
+var dtMainLighter = "#64B5F6";
+var dtAccent = "#F50057";
+
 // Classes
 var Paddle = function (x) {
 	this.x = x;
 };
 Paddle.constructor = Paddle;
 Paddle.prototype = {
-	color: 'rgb(0,0,0)',
+	color: dtMainDarker,
 	x: 5,
 	y: 10,
 	width: 20,
@@ -52,7 +62,7 @@ Paddle.prototype = {
 
 function Ball(){};
 Ball.prototype = {
-	color: 'rgb(0,0,120)',
+	color: dtAccent,
 	x: 100,
 	y: 200,
 	vx: BALL_SPEED,

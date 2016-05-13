@@ -1,0 +1,16 @@
+/* Dark Theme Colors */
+$dt-status-bar: #000000;
+$dt-app-bar: #212121;
+$dt-background: #303030;
+$dt-cards: #424242;
+$dt-main: #2196F3;
+$dt-main-darker: #1976D2;
+$dt-main-lighter: #64B5F6;
+$dt-accent: #F50057;
+
+/* Text color */
+$txt-primary: #FFFFFF;
+$txt-secondary: opacify($txt-primary, .7);
+$txt-dis-hint: opacify($txt-primary, .5);
+$txt-dividers: opacify($txt-primary, .12);
+

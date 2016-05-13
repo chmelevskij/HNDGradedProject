@@ -29,14 +29,14 @@ function init() {
 		var up = document.getElementById('up'),
 			down = document.getElementById('down');
 		if (accl > 0) {
-			up.style.visibility = 'visible';
-		} else {
-			up.style.visibility = 'hidden';
-		}
-		if (accl < 0) {
 			down.style.visibility = 'visible';
 		} else {
 			down.style.visibility = 'hidden';
+		}
+		if (accl < 0) {
+			up.style.visibility = 'visible';
+		} else {
+			up.style.visibility = 'hidden';
 		}
 
 	}

@@ -1,0 +1,36 @@
+@import url(https://fonts.googleapis.com/css?family=Roboto);
+@import "colors", "dimensions", "elements";
+
+html {
+	height: 100%;
+	font:{
+		family: 'Roboto', sans-serif;
+	}
+	background:{
+		color: $dt-background;
+	}
+	display:flex;
+		flex:{
+			direction: column;
+			wrap: nowrap;
+		}
+	justify-content: center;
+	align-items: center;
+	body{
+		nav {
+			text-align: center;
+			ul {
+				display: flex;
+				flex:{
+					direction: column;
+					wrap: nowrap;
+				}
+				justify-content: space-around;
+				align-items: space-around;
+				list-style: none;
+				padding: 0;
+				margin: 0;
+			}
+		}
+	}
+}

@@ -1,0 +1,50 @@
+/* Dark Theme Colors */
+/* Text color */
+/* Raised Buttons */
+/* Cards */
+/* Arrows */
+/* Dark Theme Colors */
+/* Text color */
+/* Raised Buttons */
+/* Cards */
+/* Arrows */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 2px;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: box-shadow 50ms ease-out;
+  vertical-align: middle;
+  color: #FFFFFF;
+  min-width: 88px;
+  height: 20px;
+  background-color: #2196F3;
+  padding: 8px;
+  margin: 4px;
+  box-shadow: 0px 1px 1px #000000; }
+  .btn:hover {
+    box-shadow: 0px 2px 2px #000000; }
+  .btn:focus {
+    box-shadow: 0px 4px 4px #000000; }
+  .btn span {
+    margin-left: 8px; }
+
+.card {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  padding: 4px;
+  background-color: #424242;
+  border-radius: 2px;
+  box-shadow: 0px 2px 2px #000000;
+  text-align: center; }
+
+html {
+  background-color: #303030; }
+
+canvas {
+  box-shadow: 0 2px 2px #000000;
+  background-color: #424242; }
+
+/*# sourceMappingURL=client.css.map */
