@@ -17,6 +17,8 @@ function init() {
 	ws.onclose = function(e) {
 		console.log('WebSocket was closed');
 		gameInfo.innerHTML = "Disconnected";
+		var msg = JSON.stringify({type: "disconnected"});
+		ws.send(msg);
 	}
 	ws.onmessage = function(e) {
 		console.log('Received message from server:\n' + e.data);

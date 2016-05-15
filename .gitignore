@@ -26,3 +26,7 @@ _testmain.go
 # Ignore backups and swap files
 *.swp
 *.swo
+
+# Exclude Sass
+*.sass-cache*
+*.map

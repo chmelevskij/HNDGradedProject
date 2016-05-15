@@ -40,11 +40,25 @@
   box-shadow: 0px 2px 2px #000000;
   text-align: center; }
 
-html {
-  background-color: #303030; }
+html, body {
+  background-color: #303030;
+  overflow: hidden; }
 
-canvas {
+html {
+  height: 100%; }
+
+body {
+  height: 98%; }
+
+canvas, textarea {
   box-shadow: 0 2px 2px #000000;
-  background-color: #424242; }
+  background-color: #424242;
+  margin: 4px;
+  border: none;
+  border-radius: 2px; }
+
+textarea {
+  color: #2196F3;
+  font-size: 1em; }
 
 /*# sourceMappingURL=client.css.map */

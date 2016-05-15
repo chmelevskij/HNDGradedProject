@@ -43,6 +43,10 @@ func (h *hub) run() {
 			_, ok := h.clients[c]
 			if ok {
 				log.Println("User disconnected", c)
+				msg := &Message{-1, "disconnected", -1}
+				h.content = msg
+				log.Println(msg)
+				h.broadcastMessage()
 				delete(h.clients, c)
 				close(c.send)
 			}

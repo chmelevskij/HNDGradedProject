@@ -1,10 +1,29 @@
 @import "colors", "dimensions", "elements";
 
-html {
+html, body{
     background-color: $dt-background;
+    overflow: hidden;
 }
 
-canvas{
+html {
+    height: 100%;
+}
+
+body{
+    height: 98%;
+}
+
+canvas, textarea{
     box-shadow: 0 2px 2px $dt-status-bar;
     background-color: $dt-cards;
+    margin: 4px;
+    border: none;
+    border-radius: $radius;
+}
+
+textarea{
+    color: $dt-main;
+    font:{
+        size: 1em;
+    }
 }

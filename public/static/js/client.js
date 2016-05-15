@@ -15,7 +15,7 @@ var dtAccent = "#F50057";
 var Paddle = function (x) {
 	this.x = x;
 };
-Paddle.constructor = Paddle;
+// Paddle.constructor = Paddle;
 Paddle.prototype = {
 	color: dtMainDarker,
 	x: 5,
@@ -110,8 +110,8 @@ Ball.prototype = {
 // Rendering
 var canvas = document.getElementById('cnv'),
 	context = canvas.getContext('2d'),
-	paddleLeft = new Paddle(5),
-	paddleRight = new Paddle(canvas.width - 25),
+	paddleLeft = new Paddle(10),
+	paddleRight = new Paddle(canvas.width - 10),
 	ball = new Ball();
 
 function checkWorldBoundaries(sprite){
@@ -161,7 +161,23 @@ function render() {
 }
 render();
 
-// Connection
+// Resize canvas to window width
+window.addEventListener("resize", resizeCanvas, false);
+function resizeCanvas(){
+	// resize to current body
+	var bodyWidth = document.querySelector("body").offsetWidth;
+	var bodyHeight = document.querySelector("body").offsetHeight;
+	var txtAreaWidth = document.querySelector("textarea").offsetWidth;
+	canvas.width = bodyWidth - txtAreaWidth - 24;
+	canvas.height = bodyHeight - 16;
+
+	// move right paddle to approrpriate position
+	paddleRight.right = canvas.width - 10;
+}
+resizeCanvas();
+
+// Connection module
+
 var host = window.location.host,
 wsURL = 'ws://' + host + '/ws';
 ws = new WebSocket(wsURL);
@@ -183,7 +199,11 @@ ws.onmessage = function (e) {
 			case 3:
 				paddleRight.y += msg.y;
 				break;
-		}
+		} 
+	} else if (msg.type === "player"){
+		document.querySelector("textarea").value += "New Player\n";
+	} else if (msg.type === "disconnected"){
+		document.querySelector("textarea").value += "Player Disconnected\n";
 	}
 
 }
