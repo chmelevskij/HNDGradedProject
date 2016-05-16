@@ -62,7 +62,7 @@ var Theme = {
 var Game = (function(){
 	var BALL_SPEED = 5;
 
-	var canvas, context, paddleLeft, paddleRight, ball;
+	var ws, canvas, context, paddleLeft, paddleRight, ball;
 	// Classes for game objects
 	// most of the default are
 	// overwritten on load.
@@ -83,11 +83,13 @@ var Game = (function(){
 		x: 5,
 		y: 10,
 		width: 20,
-		height: 100,
+		height: 200,
 		alpha: 1,
 
 		// Draw paddle onto the canvas
 		draw: function(){
+			// clear previous location
+			context.clearRect(this.x, this.y - 30, this.width, this.height + 60);
 			context.fillStyle = this.color;
 			context.fillRect(this.x, this.y, this.width, this.height);
 		},
@@ -96,7 +98,7 @@ var Game = (function(){
 		get center(){
 			x = this.x + this.width / 2;
 			y = this.y + this.height / 2;
-			return {x: x, y: y};
+			return [x, y];
 		},
 		get top(){
 			return this.y;
@@ -136,43 +138,50 @@ var Game = (function(){
 		y: 200,
 		vx: BALL_SPEED,
 		vy: BALL_SPEED,
-		radius: 25,
+		r: 25,
 		alpha: 1,
 		draw: function(){
+			// clear area around the ball
+			var dx = this.left - this.r * 2;
+			var dy = this.top - this.r * 2;
+			var clrBox = this.r * 5;
+			context.clearRect(dx, dy, clrBox, clrBox);
+
+			// draw new location
 			context.beginPath();
-			context.arc(this.x, this.y, this.radius, 0, Math.PI*2, true);
+			context.arc(this.x, this.y, this.r, 0, Math.PI*2, true);
 			context.closePath();
 			context.fillStyle = this.color;
 			context.fill();
 		},
 		// getters
 		get center(){
-			return {x: this.x, y: this.y};
+			return [this.x, this.y];
 		},
 		get top(){
-			return this.y - this.radius;
+			return this.y - this.r;
 		},
 		get bottom(){
-			return this.y + this.radius;
+			return this.y + this.r;
 		},
 		get right(){
-			return this.x + this.radius;
+			return this.x + this.r;
 		},
 		get left(){
-			return this.x - this.radius;
+			return this.x - this.r;
 		},
 		// setters
 		set top(dist){
-			this.y = dist + this.radius;
+			this.y = dist + this.r;
 		},
 		set bottom(dist){
-			this.y = dist - this.radius;
+			this.y = dist - this.r;
 		},
 		set right(dist){
-			this.x = dist - this.radius;
+			this.x = dist - this.r;
 		},
 		set left(dist){
-			this.x = dist + this.radius;
+			this.x = dist + this.r;
 		}
 	};
 
@@ -180,6 +189,11 @@ var Game = (function(){
 	// These are private methods of Game module
 	// used for game physics
 
+	// Get the distance between two points
+	var _distance = function(x1, y1, x2, y2){
+		var dist = Math.hypot(x1 - x2, y1 - y2);
+		return dist;
+	}
 	// Make sure that players paddles stay on the
 	// canvas
 	var _checkWorldBoundaries = function (sprite){
@@ -202,12 +216,34 @@ var Game = (function(){
 
 	// Use paddle to hit the ball
 	var _checkForCollision = function (paddle, ball){
-			if(ball.left < paddle.right &&
-				ball.right > paddle.left &&
-				ball.top < paddle.bottom &&
-				ball.bottom > paddle.top){
-					ball.vx = -ball.vx;
+		// closest point of paddle box to center
+		// of the ball
+		var cx, cy;
+
+		if(ball.x < paddle.left){
+			cx = paddle.left;
+		}else if (ball.x > paddle.right){
+			cx = paddle.right;
+		}else{
+			cx = ball.x;
+		}
+
+		if(ball.y < paddle.top){
+			cy = paddle.top;
+		}else if (ball.y > paddle.bottom){
+			cy = paddle.bottom;
+		}else{
+			cy = ball.y;
+		}
+
+		// if the closest point is inside the
+		// circle
+		if (_distance(ball.x, ball.y, cx, cy) < ball.r){
+			ball.vx = -ball.vx;
+			if(ball.bottom < paddle.top || ball.top > paddle.bottom){
+				ball.vy = -ball.vy;
 			}
+		}
 	}
 
 	// Game update loop which cleares canvas,
@@ -215,11 +251,13 @@ var Game = (function(){
 	// by using requestAnimationFrame it suppose to
 	// keep 60Fps refresh rate
 	var _render = function () {
-		context.clearRect(0, 0, canvas.width, canvas.height);
-
 		_checkWorldBoundaries(paddleLeft);
 		_checkWorldBoundaries(paddleRight);
 		_bounceTheBall(ball);
+
+
+		ball.x += ball.vx;
+		ball.y += ball.vy;
 
 		_checkForCollision(paddleLeft, ball);
 		_checkForCollision(paddleRight, ball);
@@ -227,9 +265,6 @@ var Game = (function(){
 		ball.draw();
 		paddleLeft.draw();
 		paddleRight.draw();
-
-		ball.x += ball.vx;
-		ball.y += ball.vy;
 
 		window.requestAnimationFrame(_render);
 	}
@@ -242,7 +277,8 @@ var Game = (function(){
 		paddleRight = new Paddle(canvas.width - 10);
 		ball = new Ball();
 		resizeCanvas();
-		new Connection();
+		window.addEventListener("resize", Game.resizeCanvas, false);
+		ws =  new Connection();
 		_render();
 	}
 
@@ -279,9 +315,8 @@ var Game = (function(){
 	return {
 		init: init,
 		update: update,
-		resizeCanvas: resizeCanvas
+		resizeCanvas: resizeCanvas,
 	}
 })();
 
-window.addEventListener("resize", Game.resizeCanvas, false);
 window.onload  = Game.init();
