@@ -30,3 +30,6 @@ _testmain.go
 # Exclude Sass
 *.sass-cache*
 *.map
+
+# Logs
+*.log

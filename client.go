@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 	"github.com/gorilla/websocket"
-	"log"
 	"net/http"
 	"time"
+
+	l "github.com/chmelevskij/HNDGradedProject/logging"
 )
 
 var maxId int = 0
@@ -53,7 +54,7 @@ func serveWs(w http.ResponseWriter, r *http.Request) {
 
 	ws, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
-		log.Println(err)
+		l.Error.Println(err)
 		return
 	}
 
@@ -81,10 +82,10 @@ func (c *client) readPump() {
 		err := c.ws.ReadJSON(&message)
 		message.UserId = c.id
 		if err != nil {
-			log.Println(err)
+			l.Error.Println(err)
 			break
 		}
-		log.Println(&message)
+		l.Info.Println(&message)
 		h.broadcast <- &message
 	}
 }

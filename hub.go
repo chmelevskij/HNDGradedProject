@@ -1,7 +1,7 @@
 package main
 
 import (
-	"log"
+	l "github.com/chmelevskij/HNDGradedProject/logging"
 )
 
 // hub maintains the set of active connections and broadcasts the
@@ -36,16 +36,16 @@ func (h *hub) run() {
 		select {
 		case c := <-h.register:
 			h.clients[c] = true
-			log.Println("New user connected", c)
+			l.Info.Println("New user connected", c)
 			c.send <- h.content
 			break
 		case c := <-h.unregister:
 			_, ok := h.clients[c]
 			if ok {
-				log.Println("User disconnected", c)
+				l.Info.Println("User disconnected", c)
 				msg := &Message{-1, "disconnected", -1}
 				h.content = msg
-				log.Println(msg)
+				l.Info.Println(msg)
 				h.broadcastMessage()
 				delete(h.clients, c)
 				close(c.send)
