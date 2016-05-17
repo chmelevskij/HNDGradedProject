@@ -84,12 +84,10 @@ var Game = (function(){
 		y: 10,
 		width: 20,
 		height: 200,
-		alpha: 1,
 
 		// Draw paddle onto the canvas
 		draw: function(){
 			// clear previous location
-			context.clearRect(this.x, this.y - 30, this.width, this.height + 60);
 			context.fillStyle = this.color;
 			context.fillRect(this.x, this.y, this.width, this.height);
 		},
@@ -139,7 +137,6 @@ var Game = (function(){
 		vx: BALL_SPEED,
 		vy: BALL_SPEED,
 		r: 25,
-		alpha: 1,
 		draw: function(){
 			// clear area around the ball
 			var dx = this.left - this.r * 2;
@@ -194,23 +191,24 @@ var Game = (function(){
 		var dist = Math.hypot(x1 - x2, y1 - y2);
 		return dist;
 	}
+
 	// Make sure that players paddles stay on the
 	// canvas
-	var _checkWorldBoundaries = function (sprite){
-		if (sprite.top < 0) {
-			sprite.top = 0;
-		} else if  (sprite.bottom > canvas.height){
-			sprite.bottom = canvas.height;
+	var _checkWorldBoundaries = function (paddle){
+		if (paddle.top < 0) {
+			paddle.top = 0;
+		} else if  (paddle.bottom > canvas.height){
+			paddle.bottom = canvas.height;
 		}
 	}
 
 	// Bounce the ball in canvas
-	var _bounceTheBall = function (sprite){
-		if (sprite.top < 0 || sprite.bottom > canvas.height) {
-			sprite.vy = -sprite.vy;
+	var _bounceTheBall = function (ball){
+		if (ball.top < 0 || ball.bottom > canvas.height) {
+			ball.vy = -ball.vy;
 		}
-		if  (sprite.right > canvas.width || sprite.left < 0){
-			sprite.vx = -sprite.vx;
+		if  (ball.right > canvas.width || ball.left < 0){
+			ball.vx = -ball.vx;
 		}
 	}
 
@@ -255,7 +253,6 @@ var Game = (function(){
 		_checkWorldBoundaries(paddleRight);
 		_bounceTheBall(ball);
 
-
 		ball.x += ball.vx;
 		ball.y += ball.vy;
 
@@ -287,9 +284,11 @@ var Game = (function(){
 	var update = function(msg){
 		switch(msg.id){
 			case 2:
+				context.clearRect(paddleLeft.x-2, paddleLeft.y-2, paddleLeft.width+4, paddleLeft.height+4);
 				paddleLeft.y += msg.y;
 				break;
 			case 3:
+				context.clearRect(paddleRight.x-2, paddleRight.y-2, paddleRight.width+4, paddleRight.height+4);
 				paddleRight.y += msg.y;
 				break;
 		} 

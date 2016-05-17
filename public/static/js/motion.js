@@ -1,12 +1,13 @@
 // Check if browser supported
-var hasWebSocket = 'WebSocket' in window,
-hasMotionEvent = 'DeviceMotionEvent' in window;
+var hasWebSocket = 'WebSocket' in window;
+
 // Script to initialize connection
 function init() {
-	var host = window.location.host,
-	wsURL = 'ws://' + host + '/ws',
-	ws = new WebSocket(wsURL),
-	lastVelocity = null;
+	var host = window.location.host;
+	var wsURL = 'ws://' + host + '/ws';
+	var ws = new WebSocket(wsURL);
+
+	// Events for websocket
 	ws.onopen = function (e) {
 		console.log('Websocket open on: ' + wsURL);
 	}
@@ -19,8 +20,8 @@ function init() {
 	ws.onerror = function (e) {
 		console.log('Something went wrong with the connection');
 	}
-	// ROTATION
 
+	// ROTATION
 	var ball = document.querySelector('.ball');
 	var garden = document.querySelector('.garden');
 	var tdX = document.querySelector('#x');
@@ -56,6 +57,7 @@ function init() {
 		ball.style.left = (maxY * y / 180 - 10) + 'px';
 	}
 	window.addEventListener('deviceorientation', handleOrientation);
+
 	// MOTION
 	var maxXacceleration = 0;
 	var maxYacceleration = 0;
@@ -75,6 +77,7 @@ function init() {
 		tdZ.innerHTML = Math.round(maxZacceleration);
 	}
 
+	// MOTION with gravity
 	var maxGXacceleration = 0;
 	var maxGYacceleration = 0;
 	var maxGZacceleration = 0;
@@ -92,6 +95,8 @@ function init() {
 		tdGY.innerHTML = Math.round(maxGYacceleration);
 		tdGZ.innerHTML = Math.round(maxGZacceleration);
 	}
+
+	// Show arrows
 	function showDirection(event) {
 		var up = document.getElementById('up'),
 		down = document.getElementById('down'),
@@ -122,10 +127,14 @@ function init() {
 			right.style.visibility = 'hidden';
 		}
 	}
+
+	// Attach events to functions
 	window.addEventListener('devicemotion', showAccelerationInTable);
 	window.addEventListener('devicemotion', showWithGAccelerationInTable);
 	window.addEventListener('devicemotion', showDirection);
 }
+
+// Only connect if browser supports websockets
 if (hasWebSocket) {
 	init();
 } else {
