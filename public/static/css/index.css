@@ -4,6 +4,7 @@
 /* Raised Buttons */
 /* Cards */
 /* Arrows */
+/* Generic UI Elements */
 /* Dark Theme Colors */
 /* Text color */
 /* Raised Buttons */
@@ -50,16 +51,21 @@ html {
   flex-wrap: nowrap;
   justify-content: center;
   align-items: center; }
-  html body nav {
-    text-align: center; }
-    html body nav ul {
-      display: flex;
-      flex-direction: column;
-      flex-wrap: nowrap;
-      justify-content: space-around;
-      align-items: space-around;
-      list-style: none;
-      padding: 0;
-      margin: 0; }
+  html body nav section {
+    color: rgba(255, 255, 255, 0.7); }
+    html body nav section h4 {
+      color: #FFFFFF; }
+    html body nav section li {
+      text-align: initial; }
+  html body nav ul {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: space-around;
+    list-style: none;
+    padding: 0;
+    margin: 0; }
 
 /*# sourceMappingURL=index.css.map */

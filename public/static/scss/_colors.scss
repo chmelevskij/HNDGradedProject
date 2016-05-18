@@ -10,7 +10,7 @@ $dt-accent: #F50057;
 
 /* Text color */
 $txt-primary: #FFFFFF;
-$txt-secondary: opacify($txt-primary, .7);
-$txt-dis-hint: opacify($txt-primary, .5);
-$txt-dividers: opacify($txt-primary, .12);
+$txt-secondary: transparentize($txt-primary, .3);
+$txt-dis-hint: transparentize($txt-primary, .5);
+$txt-dividers: transparentize($txt-primary, .88);
 

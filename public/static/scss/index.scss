@@ -18,12 +18,21 @@ html {
 	align-items: center;
 	body{
 		nav {
-			text-align: center;
+			section{
+				color: $txt-secondary;
+				h4{
+					color: $txt-primary;
+				}
+				li{
+				text-align: initial;
+				}
+			}
 			ul {
+				text-align: center;
 				display: flex;
 				flex:{
-					direction: column;
-					wrap: nowrap;
+					direction: row;
+					wrap: wrap;
 				}
 				justify-content: space-around;
 				align-items: space-around;
