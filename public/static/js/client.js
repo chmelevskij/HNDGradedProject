@@ -3,10 +3,11 @@ var Connection = function(){
 	var host = window.location.host;
 	var wsURL = 'ws://' + host + '/ws';
 	var ws = new WebSocket(wsURL);
+	var txtArea = document.querySelector("textarea");
 
 	ws.onopen = function (e) {
 		console.log('Websocket open on: ' + wsURL);
-	    var initMsg = JSON.stringify({type:"projection"});
+		var initMsg = JSON.stringify({type:"projection"});
 		ws.send(initMsg);
 	}
 	ws.onclose = function (e) {
@@ -14,14 +15,17 @@ var Connection = function(){
 	}
 	ws.onmessage = function (e) {
 		var msg = JSON.parse(e.data);
-		if(msg.type === "control"){
-			Game.update(msg);
-		} else if (msg.type === "player"){
-			document.querySelector("textarea").value += "New Player\n";
-		} else if (msg.type === "disconnected"){
-			document.querySelector("textarea").value += "Player Disconnected\n";
+		switch(msg.type){
+			case "control":
+				Game.update(msg);
+				break
+			case "player":
+				txtArea.value += "New Player\n";
+				break
+			case "disconnected":
+				txtArea.value += "Player Disconnected\n";
+				break
 		}
-
 	}
 	ws.onerror = function (e) {
 		console.log('Something went wrong with the connection');
@@ -314,7 +318,6 @@ var Game = (function(){
 	return {
 		init: init,
 		update: update,
-		resizeCanvas: resizeCanvas,
 	}
 })();
 
