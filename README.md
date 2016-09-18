@@ -2,7 +2,7 @@
 ## WebSocket Pong
 This is web based application using real time networking with
 websockets and mobile device accelerometer as input to implement
-the replica of first ever video game.
+the simple pong. I was made solely for college project.
 
 ## Structure
 A little bit on how project is layed out:
