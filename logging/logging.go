@@ -20,12 +20,12 @@ var (
 
 func init() {
 	// Create and assign file for INFO logs
-	infoLog, err := os.Create("./logging/info.log")
+	infoLog, err := os.Create("/var/log/info.log")
 	check(err)
 	Info = log.New(infoLog, "[INFO]: ", log.Ltime|log.Lshortfile)
 
 	// Create and assign file for ERROR logs
-	errorLog, err := os.Create("./logging/error.log")
+	errorLog, err := os.Create("/var/log/error.log")
 	check(err)
 	Error = log.New(errorLog, "[ERROR]: ", log.Ltime|log.Lshortfile)
 }
