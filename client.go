@@ -36,6 +36,9 @@ type client struct {
 
 	// Receiving channel.
 	send chan *Message
+
+	// id of the room
+	channel int
 }
 
 // upgrader upgrades HTTP to WebSocket.

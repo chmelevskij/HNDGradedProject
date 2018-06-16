@@ -6,9 +6,10 @@ import (
 
 // Message for clients to communicate.
 type Message struct {
-	UserId int    `json:"id"`
-	Type   string `json:"type"`
-	Y      int    `json:"y"`
+	UserId  int    `json:"id"`
+	Type    string `json:"type"`
+	Y       int    `json:"y"`
+	Channel int    `json:"channel"`
 }
 
 // String allows object to be printed in human readable format
